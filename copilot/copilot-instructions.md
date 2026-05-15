@@ -12,7 +12,7 @@ All 4jawaly endpoints use Basic Auth: `Authorization: Basic base64(JAWALY_API_KE
 - Active senders: `GET /account/area/me/senders?status=1`
 
 ## WhatsApp API
-- Endpoint: `POST https://api-users.4jawaly.com/api/v1/whatsapp/591`
+- Endpoint: `POST https://api-users.4jawaly.com/api/v1/whatsapp/{PROJECT_ID}` (PROJECT_ID is account-specific, read from env)
 - Body shape: `{ "path": "...", "params": {...} }`
 - Paths:
   - `message/text` — `{phone, body}`

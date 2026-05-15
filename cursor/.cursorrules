@@ -11,7 +11,8 @@
 - الرصيد: `GET /account/area/me/balances`
 - المرسلون المفعّلون: `GET /account/area/me/senders?status=1`
 
-## WhatsApp — endpoint ثابت: `POST https://api-users.4jawaly.com/api/v1/whatsapp/591`
+## WhatsApp — `POST https://api-users.4jawaly.com/api/v1/whatsapp/{PROJECT_ID}`
+> `PROJECT_ID` متغيّر حسب الحساب (مثال: `591`). اقرأه من env `JAWALY_WA_PROJECT_ID`.
 شكل كل request: `{"path":"...","params":{...}}`.
 
 | الغرض | path | params |

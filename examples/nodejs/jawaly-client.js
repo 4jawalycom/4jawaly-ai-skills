@@ -3,7 +3,8 @@ const { JAWALY_API_KEY, JAWALY_API_SECRET } = process.env;
 const TOKEN = Buffer.from(`${JAWALY_API_KEY}:${JAWALY_API_SECRET}`).toString("base64");
 
 const SMS_BASE = "https://api-sms.4jawaly.com/api/v1";
-const WA_URL = "https://api-users.4jawaly.com/api/v1/whatsapp/591";
+const WA_PROJECT_ID = process.env.JAWALY_WA_PROJECT_ID || "591";
+const WA_URL = `https://api-users.4jawaly.com/api/v1/whatsapp/${WA_PROJECT_ID}`;
 const WA_NAMESPACE = "d62f7444_aa0b_40b8_8f46_0bb55ef2862e";
 
 const HEADERS = {

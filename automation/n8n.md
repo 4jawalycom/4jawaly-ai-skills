@@ -34,7 +34,7 @@
 - `GET https://api-sms.4jawaly.com/api/v1/account/area/me/senders?status=1`
 
 ## 5) WhatsApp — نص
-- `POST https://api-users.4jawaly.com/api/v1/whatsapp/591`
+- `POST https://api-users.4jawaly.com/api/v1/whatsapp/{{$env.JAWALY_WA_PROJECT_ID}}` — استبدل `{{...}}` برقم مشروعك (مثال: `591`)
 ```json
 {
   "path": "message/text",

@@ -27,7 +27,7 @@
 - `GET https://api-sms.4jawaly.com/api/v1/account/area/me/balances`
 
 ### WhatsApp Text
-- URL: `https://api-users.4jawaly.com/api/v1/whatsapp/591`
+- URL: `https://api-users.4jawaly.com/api/v1/whatsapp/{PROJECT_ID}` — `PROJECT_ID` خاص بحسابك (مثل `591`)
 - Data:
 ```json
 {"path":"message/text","params":{"phone":"{{phone}}","body":"{{message}}"}}

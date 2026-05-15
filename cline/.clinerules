@@ -11,7 +11,7 @@
 - `GET /account/area/me/balances`
 - `GET /account/area/me/senders?status=1`
 
-**WhatsApp** (`POST https://api-users.4jawaly.com/api/v1/whatsapp/591`):
+**WhatsApp** (`POST https://api-users.4jawaly.com/api/v1/whatsapp/{PROJECT_ID}` — `PROJECT_ID` per-account, from env):
 - `path:"message/text"` → text
 - `path:"message/file"` → image/video/audio/document
 - `path:"message/location"` → location
