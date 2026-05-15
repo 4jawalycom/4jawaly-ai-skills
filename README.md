@@ -1,51 +1,69 @@
 # 4jawaly AI Skills
 
-مهارات جاهزة لاستخدام منصة [4jawaly](https://4jawaly.com) مع مساعدات الذكاء الاصطناعي (Claude Code وغيره).
+تكاملات جاهزة لـ [4jawaly](https://4jawaly.com) (SMS + WhatsApp) لكل أدوات الذكاء الاصطناعي الحديثة.
 
-## المهارات المتاحة
+## ماذا يضم هذا الريبو؟
 
-| المهارة | الوصف |
+| المجلد | الاستخدام |
 |---|---|
-| [`sms-4jawaly`](.claude/skills/sms-4jawaly/SKILL.md) | إرسال SMS، الاستعلام عن الرصيد، جلب أسماء المرسلين المفعّلة |
-| [`whatsapp-interactive-4jawaly`](.claude/skills/whatsapp-interactive-4jawaly/SKILL.md) | إرسال رسائل واتساب: نص، جهة اتصال، موقع، رابط، ملفات، أزرار، قوائم |
-| [`whatsapp-template-4jawaly`](.claude/skills/whatsapp-template-4jawaly/SKILL.md) | إرسال قوالب واتساب المعتمدة من Meta (OTP، إشعارات...) |
+| [`.claude/skills/`](.claude/skills/) | مهارات Claude Code / Claude Desktop |
+| [`mcp-server/`](mcp-server/) | **MCP Server رسمي** يعمل مع Claude/Cursor/Cline |
+| [`cursor/`](cursor/) | قواعد `.cursorrules` لـ Cursor |
+| [`cline/`](cline/) | قواعد `.clinerules` لـ Cline |
+| [`windsurf/`](windsurf/) | قواعد `.windsurfrules` لـ Windsurf |
+| [`copilot/`](copilot/) | تعليمات GitHub Copilot |
+| [`examples/python/`](examples/python/) | عميل Python + أمثلة OpenAI/Anthropic function calling |
+| [`examples/nodejs/`](examples/nodejs/) | عميل Node.js |
+| [`automation/`](automation/) | وصفات n8n / Make / Zapier |
 
-## التثبيت في Claude Code
+## الاختيار السريع
 
-### للمشروع الحالي فقط
-```bash
-git clone https://github.com/4jawalycom/4jawaly-ai-skills-.git
-cp -r 4jawaly-ai-skills-/.claude/skills/* .claude/skills/
-```
+| تستخدم... | استعمل |
+|---|---|
+| Claude Code / Desktop | `.claude/skills/` أو `mcp-server/` |
+| Cursor / Cline / Windsurf | `mcp-server/` (الأقوى) أو ملفات rules |
+| تبني agent بنفسك (OpenAI/Anthropic SDK) | `examples/` |
+| أتمتة بدون كود | `automation/` |
 
-### لكل المشاريع (عالمياً)
-```bash
-mkdir -p ~/.claude/skills
-cp -r 4jawaly-ai-skills-/.claude/skills/* ~/.claude/skills/
-```
+## المهارات الثلاث
+
+1. **SMS** — إرسال، رصيد، أسماء المرسلين
+2. **WhatsApp Messages** — نص، ملفات، موقع، رابط، جهة اتصال، أزرار، قوائم
+3. **WhatsApp Templates** — قوالب Meta المعتمدة (OTP، إشعارات...)
 
 ## الإعداد
 
-كل المهارات تستخدم `Basic Auth`:
-```
-Authorization: Basic base64(APP_KEY:API_SECRET)
-```
-
-ضع اعتماداتك في متغيرات البيئة:
 ```bash
 export JAWALY_API_KEY="your_app_key"
 export JAWALY_API_SECRET="your_api_secret"
-export JAWALY_TOKEN=$(echo -n "$JAWALY_API_KEY:$JAWALY_API_SECRET" | base64)
 ```
 
-## نقاط النهاية الرئيسية
+كل التكاملات تستخدم Basic Auth: `Authorization: Basic base64(KEY:SECRET)`.
 
+### نقاط النهاية
 - **SMS**: `https://api-sms.4jawaly.com/api/v1`
-- **WhatsApp**: `https://api-users.4jawaly.com/api/v1/whatsapp/{PROJECT_ID}`
+- **WhatsApp**: `https://api-users.4jawaly.com/api/v1/whatsapp/{PROJECT_ID}` (افتراضي `591`)
+
+## التثبيت
+
+### Claude Code (Skills)
+```bash
+git clone https://github.com/4jawalycom/4jawaly-ai-skills-.git
+cp -r 4jawaly-ai-skills-/.claude/skills/* ~/.claude/skills/
+```
+
+### MCP Server (الأقوى — يعمل مع كل العملاء)
+```bash
+cd mcp-server && npm install && npm start
+```
+راجع [`mcp-server/README.md`](mcp-server/README.md) لربطه بـ Claude / Cursor.
+
+### Cursor / Cline / Windsurf
+انسخ ملف الـ rules من المجلد المقابل لجذر مشروعك.
 
 ## الترخيص
 
-MIT — راجع [LICENSE](LICENSE).
+[MIT](LICENSE)
 
 ## المساهمة
 

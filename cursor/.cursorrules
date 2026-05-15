@@ -1,0 +1,35 @@
+# 4jawaly Integration Rules (Cursor)
+
+استخدم هذه القواعد عند توليد أي كود يتكامل مع 4jawaly.
+
+## Auth
+- نوع: Basic Auth، header: `Authorization: Basic base64(JAWALY_API_KEY:JAWALY_API_SECRET)`.
+- اقرأ الاعتمادات من env vars (`JAWALY_API_KEY`, `JAWALY_API_SECRET`). لا تضع توكنات في الكود.
+
+## SMS — base: `https://api-sms.4jawaly.com/api/v1`
+- إرسال: `POST /account/area/sms/send` body: `{"messages":[{"text":"...","numbers":["9665..."],"sender":"..."}]}`
+- الرصيد: `GET /account/area/me/balances`
+- المرسلون المفعّلون: `GET /account/area/me/senders?status=1`
+
+## WhatsApp — endpoint ثابت: `POST https://api-users.4jawaly.com/api/v1/whatsapp/591`
+شكل كل request: `{"path":"...","params":{...}}`.
+
+| الغرض | path | params |
+|---|---|---|
+| نص | `message/text` | `phone, body` |
+| ملف (صورة/فيديو/صوت/مستند) | `message/file` | `phone, type, body(url), caption?, filename?` |
+| موقع | `message/location` | `phone, lat, lng, address?, name?` |
+| رابط | `message/link` | `phone, body(url), title?, description?` |
+| جهة اتصال | `message/contact` | `phone, contacts[]` |
+| قالب Meta | `message/template` | `phone, template, language, namespace, params[]` |
+| أزرار/قائمة | `global` | يغلّف Graph API كاملاً |
+
+## قواعد
+- رقم الجوال: دولي بدون `+` (مثل `966501234567`).
+- روابط الملفات: HTTPS مباشر فقط.
+- الأزرار: ≤ 3، عنوان ≤ 20 حرف. القائمة: ≤ 10 صفوف.
+- الرسائل التفاعلية تعمل داخل نافذة 24 ساعة فقط؛ خارجها استخدم `message/template`.
+- ثوابت القالب: `language.policy="deterministic"`, `language.code="ar"`, `namespace="d62f7444_aa0b_40b8_8f46_0bb55ef2862e"`.
+- لا تسجّل `Authorization` في اللوقات.
+
+تفاصيل كاملة وأمثلة JSON: راجع `.claude/skills/` في هذا الريبو.

@@ -1,0 +1,18 @@
+{
+  "name": "@4jawaly/mcp-server",
+  "version": "0.1.0",
+  "description": "MCP server for 4jawaly SMS + WhatsApp APIs",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "4jawaly-mcp": "src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "keywords": ["mcp", "4jawaly", "sms", "whatsapp", "claude"],
+  "license": "MIT"
+}

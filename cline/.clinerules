@@ -1,0 +1,23 @@
+# 4jawaly Integration Rules (Cline)
+
+نفس قواعد Cursor. راجع `cursor/.cursorrules` أو `.claude/skills/` للتفاصيل الكاملة.
+
+## Quick Reference
+
+**Auth**: `Authorization: Basic base64(JAWALY_API_KEY:JAWALY_API_SECRET)`
+
+**SMS** (base `https://api-sms.4jawaly.com/api/v1`):
+- `POST /account/area/sms/send` — `{"messages":[{"text","numbers":[],"sender"}]}`
+- `GET /account/area/me/balances`
+- `GET /account/area/me/senders?status=1`
+
+**WhatsApp** (`POST https://api-users.4jawaly.com/api/v1/whatsapp/591`):
+- `path:"message/text"` → text
+- `path:"message/file"` → image/video/audio/document
+- `path:"message/location"` → location
+- `path:"message/link"` → link preview
+- `path:"message/contact"` → contact card
+- `path:"message/template"` → Meta template
+- `path:"global"` → interactive (buttons/list)
+
+**Constraints**: phone international without `+`; HTTPS media only; interactive needs 24h window; templates work anytime.
