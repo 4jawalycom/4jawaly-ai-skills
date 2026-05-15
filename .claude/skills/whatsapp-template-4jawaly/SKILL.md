@@ -6,7 +6,7 @@ description: إرسال قوالب واتساب (Meta-approved templates) عبر
 # 4jawaly WhatsApp Templates
 
 ## الثابت في كل الطلبات
-- Endpoint: `POST https://api-users.4jawaly.com/api/v1/whatsapp/591`
+- Endpoint: `POST https://api-users.4jawaly.com/api/v1/whatsapp/{PROJECT_ID}` — `PROJECT_ID` متغيّر حسب الحساب (مثال: `591`)، اقرأه من env `JAWALY_WA_PROJECT_ID`.
 - Headers: `accept: application/json`, `Content-Type: application/json`, `Authorization: Basic {{TOKEN}}` (نفس التوكن للقوالب الثلاثة).
 - `path`: دائماً `"message/template"`.
 - `language`: `{"policy":"deterministic","code":"ar"}`.
@@ -67,7 +67,7 @@ description: إرسال قوالب واتساب (Meta-approved templates) عبر
 
 ## curl موحّد
 ```bash
-curl -X POST "https://api-users.4jawaly.com/api/v1/whatsapp/591" \
+curl -X POST "https://api-users.4jawaly.com/api/v1/whatsapp/$PROJECT_ID" \
   -H "accept: application/json" -H "Content-Type: application/json" \
   -H "Authorization: Basic $TOKEN" \
   -d @template.json

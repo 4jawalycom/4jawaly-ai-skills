@@ -6,7 +6,7 @@ Same as `cursor/.cursorrules`. Copy that file's content here or symlink.
 
 - Auth: `Basic base64(KEY:SECRET)` from env (`JAWALY_API_KEY`, `JAWALY_API_SECRET`).
 - SMS base: `https://api-sms.4jawaly.com/api/v1` → `/account/area/sms/send`, `/me/balances`, `/me/senders?status=1`.
-- WhatsApp: `POST https://api-users.4jawaly.com/api/v1/whatsapp/591` with `{path, params}`.
+- WhatsApp: `POST https://api-users.4jawaly.com/api/v1/whatsapp/{PROJECT_ID}` with `{path, params}`. `PROJECT_ID` is per-account; read from env.
   - `message/text|file|location|link|contact|template` for direct sends.
   - `global` wraps Meta Graph API for buttons/list interactive.
 - Phones international, no `+`. Media HTTPS only. Interactive needs 24h window; templates don't.

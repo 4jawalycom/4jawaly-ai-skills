@@ -6,7 +6,9 @@ description: إرسال رسائل واتساب عبر 4jawaly — نص، جهة
 # 4jawaly WhatsApp Messages
 
 ## الثابت
-- Endpoint: `POST https://api-users.4jawaly.com/api/v1/whatsapp/591`
+- Endpoint: `POST https://api-users.4jawaly.com/api/v1/whatsapp/{PROJECT_ID}`
+  - `PROJECT_ID` خاص بحساب العميل (يُعطى عند تفعيل واتساب)، مثال: `591`.
+  - اقرأه من env: `JAWALY_WA_PROJECT_ID`.
 - Headers:
   - `accept: application/json`
   - `Content-Type: application/json`
@@ -141,7 +143,7 @@ description: إرسال رسائل واتساب عبر 4jawaly — نص، جهة
 
 ## curl موحّد
 ```bash
-curl -X POST "https://api-users.4jawaly.com/api/v1/whatsapp/591" \
+curl -X POST "https://api-users.4jawaly.com/api/v1/whatsapp/$PROJECT_ID" \
   -H "accept: application/json" \
   -H "Content-Type: application/json" \
   -H "Authorization: Basic $TOKEN" \
