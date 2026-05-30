@@ -150,12 +150,14 @@ You are the orchestrator. Your responsibilities:
 - `daily_guarantee_tiers` (publisher_id, tier, computed_at, average_daily_requests, daily_guarantee_usd)
 - `payout_requests` (id, publisher_id, amount_usd, status, processed_at)
 - `audit_events` (id, prev_hash, hash, actor, action, target, data jsonb, created_at) — append-only
+- `spend_events` (**idempotency_key TEXT PRIMARY KEY**, campaign_id, publisher_id, amount_usd, state, ts) — **source of truth for accounting; PostgreSQL UNIQUE constraint enforces exactly-once via `INSERT ... ON CONFLICT DO NOTHING`. This table is the dedup boundary; ClickHouse is downstream analytics only.**
 
 ### Event tables (ClickHouse)
+> ClickHouse is append-only and does **not** enforce uniqueness. All tables below are raw analytics streams. Deduplication for accounting happens upstream in PostgreSQL `spend_events`. ClickHouse `raw_spend` mirrors confirmed PostgreSQL rows for reporting/reconciliation; never query ClickHouse for authoritative billing totals.
 - `raw_impressions` (impression_id, app_id, campaign_id, publisher_id, advertiser_id, price_usd, currency, is_house, device_hash, ip, ts, state, fraud_flags)
 - `raw_clicks` (click_id, impression_id, ts, state, fraud_flags)
 - `bid_requests` (bid_id, app_id, ts, latency_ms, winning_campaign_id, floor_usd)
-- `spend_events` (idempotency_key UNIQUE, campaign_id, amount_usd, ts) — also mirrored in PostgreSQL for accounting
+- `raw_spend` (idempotency_key, campaign_id, publisher_id, amount_usd, state, ts) — **CDC mirror of PostgreSQL `spend_events`, deduplicated upstream; use only for analytics, never for billing**
 
 ### Cache (Redis)
 - `campaigns:active` — set of active campaign IDs, refreshed every 30s
@@ -360,7 +362,7 @@ Each row = one assignable task. `Agent` = recommended (Kimi/Minimax). `Effort` =
 |----|------|-------|---------|--------|-----|
 | H01 | Tracking Service: `/impression`, `/click` — verify JWT, check nonce, publish Avro | Kimi | G07, A05, A07 | L | D04, D07 |
 | H02 | Fraud Detection consumer: anomaly rules (CTR>30%, geo spread, sub-second clicks) | Kimi | A05, A10 | L | D09 |
-| H03 | Accounting consumer: `spend_events` with idempotency_key, state machine pending→confirmed→final | Kimi | A05, A10, D01 | L | D15, D16 |
+| H03 | Accounting consumer: writes PostgreSQL `spend_events` (idempotency_key PK, `ON CONFLICT DO NOTHING`) as source of truth; state machine pending→confirmed→final; CDC-mirror to ClickHouse `raw_spend` for analytics only | Kimi | A05, A10, D01 | L | D15, D16 |
 | H04 | Dispute handler: 30-day window after `final`, emits Kafka `dispute.opened` | Kimi | H03 | M | D16 |
 | H05 | Payout request workflow (publisher) + KYC Full gate at $500 | Kimi | H03, C09 | M | D19, D28 |
 | H06 | ZATCA Phase 2 e-invoice generation for advertisers | Kimi | H03 | XL → split | D21 |
@@ -422,7 +424,7 @@ Each row = one assignable task. `Agent` = recommended (Kimi/Minimax). `Effort` =
 
 - **EPIC A**: `docker-compose up` brings all infra healthy; CI green; ClickHouse receives test event from Kafka.
 - **EPIC B**: Login via ZITADEL with PKCE works for each dashboard; backend rejects requests missing/invalid JWT; role claims correctly extracted.
-- **EPIC C**: Publisher registers → app created in `pending` → admin approves → device registers with Ed25519 → SDK config returned; KYC Lite mandatory; KYC Full blocked until $500 accrued.
+- **EPIC C**: Publisher registers → app created in `pending` → admin approves → device registers with Ed25519 → SDK config returned; KYC Lite mandatory at signup; KYC Full **available at any time** (publisher may complete early to avoid friction at payout) and **required at/after the $500 accrued threshold** before further payout. Hard cap $1000 unverified, per D19.
 - **EPIC D**: Advertiser registers → campaign created → creative uploaded to CDN → moderation queued; campaign cache visible in Redis within 30s of activation.
 - **EPIC E**: Prebid auction runs in <100ms p99; internal adapter returns bids only from active, properly-targeted campaigns; house adapter invoked when no commercial bid wins.
 - **EPIC F**: Make-up payment cron computes correct deficit nightly; respects 30% cap and 14-day grace.
